@@ -85,7 +85,7 @@ def main(
             "Clean and commented codebase for learning purposes",
         ],
         repo_name="Bag of Words Git Repo",
-        repo_link="https://github.com/your-username/bag-of-words-nlp",
+        repo_link="https://github.com/kannanunni-js/nlp-bagofwords-walkthrough",
     )
 
     uvicorn.run(
