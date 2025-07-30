@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MIRROR CHECK</title>
+</head>
+<body>
+    <h1>MIRROR POINT</h1>
+
+    <div id="messages"></div>
+
+    <input type="text" id="input" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+    <button onclick="stopConnection()">Stop</button> <!-- Stop button added -->
+
+    <script>
+        const ws = new WebSocket("ws://localhost:8000/v1/ws");
+        const messagesDiv = document.getElementById("messages");
+
+        ws.onopen = () => {
+            console.log("WebSocket connected.");
+        };
+
+        ws.onmessage = (event) => {
+            console.log("Received:", event.data);
+            const messageElement = document.createElement("p");
+            messageElement.textContent = "Server: " + event.data;
+            messagesDiv.appendChild(messageElement);
+
+            if (event.data === "ping") {
+                ws.send("pong");
+            }
+        };
+
+        ws.onclose = () => {
+            console.log("Connection closed.");
+            const messageElement = document.createElement("p");
+            messageElement.textContent = "Connection closed.";
+            messagesDiv.appendChild(messageElement);
+        };
+
+        function sendMessage() {
+            const input = document.getElementById("input");
+            const message = input.value;
+            if (message.trim() !== "") {
+                ws.send(message);
+
+                const messageElement = document.createElement("p");
+                messageElement.textContent = "You: " + message;
+                messagesDiv.appendChild(messageElement);
+
+                input.value = "";
+            }
+        }
+
+        function stopConnection() {
+            ws.close();
+        }
+    </script>
+</body>
+</html>
